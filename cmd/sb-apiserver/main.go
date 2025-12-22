@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"os"
+
+	"github.com/hiidy/simpleblog/cmd/sb-apiserver/app"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	command := app.NewSimpleBlog()
+
+	if err := command.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
