@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	command := app.NewSimpleBlog()
+	command := app.NewSimpleBlogCommand()
 
 	if err := command.Execute(); err != nil {
 		os.Exit(1)
