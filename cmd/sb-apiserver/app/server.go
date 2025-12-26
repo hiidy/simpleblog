@@ -1,9 +1,6 @@
 package app
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -20,20 +17,7 @@ func NewSimpleBlogCommand() *cobra.Command {
 		Long:         `my simple go blog`,
 		SilenceUsage: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := viper.Unmarshal(opts); err != nil {
-				return err
-			}
-
-			if err := opts.Validate(); err != nil {
-				return err
-			}
-
-			fmt.Printf("ServerMode from ServerOptions: %s\n", opts.JWTKey)
-			fmt.Printf("ServerMode from VIper: %s\n\n", viper.GetString("jwt-key"))
-
-			jsonData, _ := json.MarshalIndent(opts, "", " ")
-			fmt.Println(string(jsonData))
-			return nil
+			return run(opts)
 		},
 		Args: cobra.NoArgs,
 	}
@@ -44,4 +28,26 @@ func NewSimpleBlogCommand() *cobra.Command {
 
 	opts.AddFlags(cmd.PersistentFlags())
 	return cmd
+}
+
+func run(opts *options.ServerOptions) error {
+	if err := viper.Unmarshal(opts); err != nil {
+		return err
+	}
+
+	if err := opts.Validate(); err != nil {
+		return err
+	}
+
+	cfg, err := opts.Config()
+	if err != nil {
+		return err
+	}
+
+	server, err := cfg.NewUnionServer()
+	if err != nil {
+		return err
+	}
+
+	return server.Run()
 }

@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/pflag"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
+
+	"github.com/hiidy/simpleblog/internal/apiserver"
 )
 
 var availableServerModes = sets.New(
@@ -51,4 +53,12 @@ func (o *ServerOptions) Validate() error {
 
 	// 모든 오류를 병합하여 반환
 	return utilerrors.NewAggregate(errs)
+}
+
+func (o *ServerOptions) Config() (*apiserver.Config, error) {
+	return &apiserver.Config{
+		ServerMode: o.ServerMode,
+		JWTKey:     o.JWTKey,
+		Expiration: o.Expiration,
+	}, nil
 }
