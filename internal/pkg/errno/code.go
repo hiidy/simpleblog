@@ -1,0 +1,39 @@
+package errno
+
+import (
+	"net/http"
+
+	"github.com/hiidy/simpleblog/pkg/errorsx"
+)
+
+var (
+	OK = &errorsx.ErrorX{Code: http.StatusOK, Message: ""}
+
+	ErrInternal = errorsx.ErrInternal
+
+	ErrNotFound = errorsx.ErrNotFound
+
+	ErrBind = errorsx.ErrBind
+
+	ErrInvalidArgument = errorsx.ErrInvalidArgument
+
+	ErrUnauthenticated = errorsx.ErrUnauthenticated
+
+	ErrPermissionDenied = errorsx.ErrPermissionDenied
+
+	ErrOperationFailed = errorsx.ErrOperationFailed
+
+	ErrPageNotFound = &errorsx.ErrorX{Code: http.StatusNotFound, Reason: "NotFound.PageNotFound", Message: "Page not found."}
+
+	ErrSignToken = &errorsx.ErrorX{Code: http.StatusUnauthorized, Reason: "Unauthenticated.SignToken", Message: "Error occurred while signing the JSON web token."}
+
+	ErrTokenInvalid = &errorsx.ErrorX{Code: http.StatusUnauthorized, Reason: "Unauthenticated.TokenInvalid", Message: "Token was invalid."}
+
+	ErrDBRead = &errorsx.ErrorX{Code: http.StatusInternalServerError, Reason: "InternalError.DBRead", Message: "Database read failure."}
+
+	ErrDBWrite = &errorsx.ErrorX{Code: http.StatusInternalServerError, Reason: "InternalError.DBWrite", Message: "Database write failure."}
+
+	ErrAddRole = &errorsx.ErrorX{Code: http.StatusInternalServerError, Reason: "InternalError.AddRole", Message: "Error occurred while adding the role."}
+
+	ErrRemoveRole = &errorsx.ErrorX{Code: http.StatusInternalServerError, Reason: "InternalError.RemoveRole", Message: "Error occurred while removing the role."}
+)
