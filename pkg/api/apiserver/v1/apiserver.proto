@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package v1;
+
+import "google/protobuf/empty.proto";
+import "apiserver/v1/healthz.proto";
+
+option go_package = "github.com/hiidy/simpleblog/pkg/api/apiserver/v1;v1";
+
+service SimpleBlog {
+    rpc Healthz(google.protobuf.Empty) returns (HealthzResponse) {}
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package v1;
+
+option go_package = "github.com/hiidy/simpleblog/pkg/api/apiserver/v1";
+
+enum ServiceStatus {
+  Healthy = 0;
+  Unhealthy = 1;
+}
+
+message HealthzResponse {
+  ServiceStatus status = 1;
+  string timestamp = 2;
+  string message = 3;
+}

@@ -7,6 +7,8 @@ PROJ_ROOT_DIR := $(abspath $(shell cd $(COMMON_SELF_DIR)/ && pwd -P))
 # 빌드 산출물, 임시 파일 저장 디렉토리
 OUTPUT_DIR := $(PROJ_ROOT_DIR)/_output
 
+APIROOT=$(PROJ_ROOT_DIR)/pkg/api
+
 # ==============================================================================
 # 기본 타겟을 all로 정의
 .DEFAULT_GOAL := all
@@ -33,3 +35,13 @@ tidy:  # 자동으로 의존성 패키지 추가/제거
 .PHONY: clean
 clean:  # 빌드 산출물, 임시 파일 등 정리
 	@-rm -vrf $(OUTPUT_DIR)
+
+.PHONY: protoc
+protoc:
+	@echo "===========> Generate protobuf files"
+	@protoc                                              \
+		--proto_path=$(APIROOT)                          \
+		--proto_path=$(PROJ_ROOT_DIR)/third_party/protobuf    \
+		--go_out=paths=source_relative:$(APIROOT)        \
+		--go-grpc_out=paths=source_relative:$(APIROOT)   \
+		$(shell find $(APIROOT) -name *.proto)
