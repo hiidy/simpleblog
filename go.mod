@@ -4,9 +4,11 @@ go 1.25.0
 
 require (
 	github.com/go-kratos/kratos/v2 v2.8.3
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.0
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.21.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20251029180050-ab9386a59fda
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251029180050-ab9386a59fda
 	google.golang.org/protobuf v1.36.10
 	k8s.io/apimachinery v0.34.0-alpha.0

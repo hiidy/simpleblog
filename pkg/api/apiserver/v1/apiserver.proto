@@ -2,11 +2,21 @@ syntax = "proto3";
 
 package v1;
 
-import "google/protobuf/empty.proto";
 import "apiserver/v1/healthz.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/hiidy/simpleblog/pkg/api/apiserver/v1;v1";
 
 service SimpleBlog {
-    rpc Healthz(google.protobuf.Empty) returns (HealthzResponse) {}
+  rpc Healthz(google.protobuf.Empty) returns (HealthzResponse) {
+    option (google.api.http) = {get: "/healthz"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Service health check"
+      operation_id: "Healthz"
+      tags: "Service Governance"
+    };
+  }
 }
