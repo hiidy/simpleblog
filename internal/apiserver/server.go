@@ -1,6 +1,10 @@
 package apiserver
 
 import (
+	"context"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/hiidy/simpleblog/internal/pkg/log"
@@ -55,7 +59,21 @@ func (cfg *Config) NewUnionServer() (*UnionServer, error) {
 }
 
 func (s *UnionServer) Run() error {
-	s.srv.RunOrDie()
+	go s.srv.RunOrDie()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	<-quit
+
+	log.Infow("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	s.srv.GracefulStop(ctx)
+
+	log.Infow("Server Exited")
 	return nil
 }
 
