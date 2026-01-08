@@ -36,12 +36,7 @@ tidy:  # 자동으로 의존성 패키지 추가/제거
 clean:  # 빌드 산출물, 임시 파일 등 정리
 	@-rm -vrf $(OUTPUT_DIR)
 
-.PHONY: protoc
-protoc:
+.PHONY: buf
+buf:
 	@echo "===========> Generate protobuf files"
-	@protoc                                              \
-		--proto_path=$(APIROOT)                          \
-		--proto_path=$(PROJ_ROOT_DIR)/third_party/protobuf    \
-		--go_out=paths=source_relative:$(APIROOT)        \
-		--go-grpc_out=paths=source_relative:$(APIROOT)   \
-		$(shell find $(APIROOT) -name *.proto)
+	@buf generate
