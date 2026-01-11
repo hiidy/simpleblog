@@ -3,6 +3,8 @@ package apiserver
 import (
 	"context"
 
+	mw "github.com/hiidy/simpleblog/internal/pkg/middleware/grpc"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	handler "github.com/hiidy/simpleblog/internal/apiserver/grpc"
 	"github.com/hiidy/simpleblog/internal/pkg/server"
@@ -18,8 +20,15 @@ type grpcServer struct {
 var _ server.Server = (*grpcServer)(nil)
 
 func (c *ServerConfig) NewGRPCServerOr() (server.Server, error) {
+	serverOptions := []grpc.ServerOption{
+		grpc.ChainUnaryInterceptor(
+			mw.RequestIDInterceptor(),
+		),
+	}
+
 	grpcsrv, err := server.NewGRPCServer(
 		c.cfg.GRPCOptions,
+		serverOptions,
 		func(s grpc.ServiceRegistrar) {
 			apiv1.RegisterSimpleBlogServer(s, handler.NewHandler())
 		},

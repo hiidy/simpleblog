@@ -74,4 +74,3 @@ func logOptions() *log.Options {
 	}
 	return opts
 }
-

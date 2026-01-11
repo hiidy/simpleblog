@@ -1,9 +1,12 @@
 package log
 
 import (
+	"context"
 	"sync"
 	"time"
 
+	"github.com/hiidy/simpleblog/internal/pkg/contextx"
+	"github.com/hiidy/simpleblog/internal/pkg/known"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -146,4 +149,28 @@ func Fatalw(msg string, kvs ...any) {
 
 func (l *zapLogger) Fatalw(msg string, kvs ...any) {
 	l.z.Sugar().Fatalw(msg, kvs...)
+}
+
+func W(ctx context.Context) Logger {
+	return std.W(ctx)
+}
+
+func (l *zapLogger) W(ctx context.Context) Logger {
+	lc := l.clone()
+	ctxExtractors := map[string]func(context.Context) string{
+		known.XRequestID: contextx.RequestID,
+		known.XUserID:    contextx.UserID,
+	}
+
+	for fieldName, extractor := range ctxExtractors {
+		if val := extractor(ctx); val != "" {
+			lc.z = lc.z.With(zap.String(fieldName, val))
+		}
+	}
+	return lc
+}
+
+func (l *zapLogger) clone() *zapLogger {
+	newLogger := *l
+	return &newLogger
 }
