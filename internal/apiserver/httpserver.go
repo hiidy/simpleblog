@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	handler "github.com/hiidy/simpleblog/internal/apiserver/http"
+	mw "github.com/hiidy/simpleblog/internal/pkg/middleware/gin"
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,7 @@ var _ server.Server = (*ginServer)(nil)
 
 func (c *ServerConfig) NewGinServer() server.Server {
 	engine := gin.New()
+	engine.Use(gin.Recovery(), mw.NoCache, mw.Cors, mw.Secure, mw.RequestIDMiddleware())
 
 	c.InstallRESTAPI(engine)
 
